@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/route_manager.dart';
 import 'package:vpn_basic_project/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,8 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
     (){
 SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>HomeScreen())
-      );
+      Get.off(()=>HomeScreen());
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>HomeScreen())
+
+      
     }
     );
   }

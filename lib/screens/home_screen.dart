@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:get/state_manager.dart';
+import 'package:vpn_basic_project/widgets/countdown_timer.dart';
 import 'package:vpn_basic_project/widgets/home_card.dart';
 
 import '../main.dart';
@@ -21,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String _vpnState = VpnEngine.vpnDisconnected;
   List<VpnConfig> _listVpn = [];
   VpnConfig? _selectedVpn;
+
+  final RxBool _startTimer= false.obs;
 
   @override
   void initState() {
@@ -75,7 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('VPNDai'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+            },
             icon: Icon(Icons.brightness_medium),
           ),
           Padding(
@@ -89,14 +94,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: _changeLocation(),
       body: Column(
-          mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
               height: mq.height * .03,
               width: double.maxFinite,
             ),
+            //vpnbutton
             _vpnButton(),
+
           
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -181,58 +188,63 @@ SizedBox(height: mq.height*.03,),
   Widget _vpnButton() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GestureDetector(
-            onTap: () {
-              print('clicked');
-            },
-            child: Container(
-              padding: EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue.withOpacity(0.1),
-              ),
+          Semantics(
+            button: true,
+            child: InkWell(
+              onTap: () {
+                print('clicked');
+              _startTimer.value= !_startTimer.value;
+
+              },
               child: Container(
                 padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.blue.withOpacity(0.3),
+                  color: Colors.blue.withOpacity(0.1),
                 ),
                 child: Container(
-                  height: mq.height * .14,
-                  width: mq.width * .14,
+                  padding: EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.blue,
+                    color: Colors.blue.withOpacity(0.3),
                   ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.power_settings_new_rounded,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          'Tap to Connect',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ]),
+                  child: Container(
+                    height: mq.height * .14,
+                    width: mq.width * .14,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                    ),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.power_settings_new_rounded,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(
+                            'Tap to Connect',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ]),
+                  ),
                 ),
               ),
             ),
           ),
           SizedBox(
-            height: 10,
+            height: 8,
           ),
 
 //connection status
           Column(
             children: [
               Container(
-                margin: EdgeInsets.only(top: mq.height * .015, bottom: mq.height* .08),
+                margin: EdgeInsets.only(top: mq.height * .015, bottom: mq.height* .04),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -249,6 +261,9 @@ SizedBox(height: mq.height*.03,),
               ),
             ],
           ),
+
+            Center(child: Obx(() =>  CountdownTimer(startTimer: _startTimer.value))),
+
         ],
       );
 }
